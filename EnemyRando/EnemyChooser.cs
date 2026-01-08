@@ -32,6 +32,16 @@ public static class EnemyChooser
         "brushflit"
     ];
 
+    // Anything that spawns enemies, either on death or in general
+    private static readonly string[] SummonerEnemies =
+    [
+        "song_maestro",
+        "broodmother",
+        "gargant_gloom",
+        "grove_pilgrim",
+        "coral_big_jellyfish",
+    ];
+
     private static void SetupObjects()
     {
         if (_setupObjects) return;
@@ -93,6 +103,14 @@ public static class EnemyChooser
         }
 
         var o = pool[Random.Range(0, count)];
+        if (source.name.Contains("Slab Fly Small Fresh") || 
+            source.name.Contains("Aspid Hatchling") ||
+            source.name.Contains("Gloomfly") ||
+            source.name.Contains("Song Automaton Tiny") ||
+            source.name.Contains("Coral Swimmer Small"))
+        {
+            while (SummonerEnemies.Contains(o.GetId())) o = pool[Random.Range(0, count)];
+        }
 
         bool blackThreaded;
         bool plasmified;

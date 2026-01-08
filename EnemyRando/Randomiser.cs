@@ -243,7 +243,7 @@ public static class Randomiser
                     (healthManager.transform.parent && healthManager.transform.parent.name.Contains("Key Control"));
         if (healthManager.hp > 100000) yield break;
         healthManager.hp = 10000;
-        if (arena) yield return new WaitForSeconds(1.5f);
+        if (arena) yield return new WaitForSeconds(0.75f);
         yield return new WaitUntil(() =>
         {
             // If dead then cancel
@@ -458,12 +458,9 @@ public static class Randomiser
         var ogBounds = ogCol.bounds;
         var bounds = col.bounds;
 
-        var yShift = Mathf.Abs(ogBounds.max.y - ogBounds.min.y - (bounds.max.y - bounds.min.y)) * 1.25f;
-        var touch = Physics2D.Raycast(ogBounds.max, bounds.center - ogBounds.center, 5, TerrainMask).collider;
+        var yShift = (ogBounds.max.y - bounds.min.y) * 1.1f;
+        var touch = Physics2D.Raycast(ogBounds.max, new Vector2(0, -1), ogBounds.max.y - bounds.min.y, TerrainMask).collider;
         if (!touch) yield break;
-        var sp = ogCol.transform.position;
-        var closest = touch.ClosestPoint(sp);
-        if (closest.y < hm.transform.position.y && !hm.name.Contains("Phantom")) yield break;
         hm.transform.Translate(0, yShift, 0);
     }
 }
