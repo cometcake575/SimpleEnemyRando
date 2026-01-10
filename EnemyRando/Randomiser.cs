@@ -403,6 +403,7 @@ public static class Randomiser
             re.randoType = type;
             EventHooks.AddEvent(enemy, "OnDeath", ON_RANDO_DEATH);
 
+            if (PlayerData.instance.nailUpgrades < 2) enemy.RemoveComponent<LifebloodState>();
             enemy.SetActive(true);
 
             foreach (var conf in o.ConfigGroup)
