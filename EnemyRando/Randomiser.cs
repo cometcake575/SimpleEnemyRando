@@ -383,7 +383,7 @@ public static class Randomiser
                 var val = conf.GetDefaultValue();
                 if (val == null) continue;
 
-                if (val.GetPriority() < 0) val.Setup(enemy);
+                if (val.GetPriority() < 0) val.Setup(enemy, null);
             }
 
             enemy.RemoveComponent<PersistentBoolItem>();
@@ -411,7 +411,7 @@ public static class Randomiser
                 var val = conf.GetDefaultValue();
                 if (val == null) continue;
 
-                if (val.GetPriority() >= 0) val.Setup(enemy);
+                if (val.GetPriority() >= 0) val.Setup(enemy, null);
             }
 
             if (plasmified) enemy.AddComponent<LifebloodState>();
