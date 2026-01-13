@@ -162,6 +162,11 @@ public static class Randomiser
                 canRerando = false;
             }
 
+            if (rando.target.name.Contains("Bone Flyer Giant"))
+            {
+                rando.target.hasSpecialDeath = false;
+            }
+
             if (fsm.name.Contains("Driller ") && fsm.FsmName.Equals("Death Checker"))
             {
                 fsm.SetState("Notify Parent");
