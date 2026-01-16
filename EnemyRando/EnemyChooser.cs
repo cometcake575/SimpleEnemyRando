@@ -174,6 +174,7 @@ public static class EnemyChooser
         {
             foreach (var state in fsm.FsmStates)
             {
+                if (state?.actions == null) continue;
                 if (state.actions.Any(a => a is DisplayBossTitle)) return EnemyType.Boss;
             }
         }

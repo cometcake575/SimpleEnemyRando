@@ -73,6 +73,7 @@ public static class Randomiser
                 
                 if (healthManager.isDead) return;
                 if (!PreloadManager.HasPreloaded) return;
+                EnemyRandoPlugin.Logger.LogInfo(healthManager.name);
                 if (healthManager.GetComponent<ReplacementEnemy>()) return;
                 if (healthManager.GetComponent<ReplacedEnemy>()) return;
 
@@ -243,6 +244,7 @@ public static class Randomiser
     {
         yield return new WaitForSeconds(0.02f);
         if (!healthManager) yield break;
+        if (healthManager.GetComponent<ReplacementEnemy>()) yield break;
         var fsm = healthManager.GetComponent<PlayMakerFSM>();
         var arena = (bool)healthManager.GetComponentInParent<BattleWave>() || 
                     (healthManager.transform.parent && healthManager.transform.parent.name.Contains("Key Control"));
@@ -379,6 +381,11 @@ public static class Randomiser
                 pos,
                 rot);
 
+            var re = enemy.AddComponent<ReplacementEnemy>();
+            re.target = source;
+            re.randoType = type;
+            EventHooks.AddEvent(enemy, "OnDeath", ON_RANDO_DEATH);
+
             enemy.name = $"[Enemy Rando] {o.GetName()} ({source.name})";
             
             o.PostSpawnAction?.Invoke(enemy);
@@ -402,11 +409,6 @@ public static class Randomiser
             if (Settings.MaintainHp.Value) hm.hp = hp;
             if (blackThreaded) hm.hp *= 2;
             hm.bigEnemyDeath = source.bigEnemyDeath;
-
-            var re = enemy.AddComponent<ReplacementEnemy>();
-            re.target = source;
-            re.randoType = type;
-            EventHooks.AddEvent(enemy, "OnDeath", ON_RANDO_DEATH);
 
             if (PlayerData.instance.nailUpgrades < 2) enemy.RemoveComponent<LifebloodState>();
             enemy.SetActive(true);
