@@ -44,8 +44,7 @@ public static class EnemyChooser
         _all ??= Categories.Enemies.GetObjects().Cast<PlaceableObject>()
             .Where(o =>
                 o.Prefab.GetComponent<HealthManager>() &&
-                !IgnoredEnemies.Contains(o.GetId())
-                && o.GetId() == "gloomsac").ToArray();
+                !IgnoredEnemies.Contains(o.GetId())).ToArray();
         _enemies ??= _all.Where(o => 
             GetEnemyType(o.Prefab.gameObject.GetComponent<HealthManager>()) == EnemyType.Enemy).ToArray();
         _bosses ??= _all.Where(o => 
