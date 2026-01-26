@@ -18,10 +18,6 @@ public static class EnemyChooser
 
     private static readonly string[] IgnoredEnemies =
     [
-        // Broken in water
-        "stilkin",
-        "stilkin_trapper",
-        // Not broken, just not good for rando
         "surface_scuttler",
         "slab_jailer",
         "white_palace_fly",
