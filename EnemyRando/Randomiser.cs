@@ -99,7 +99,7 @@ public static class Randomiser
 
             if (!rando.target) return;
 
-            var replaced = rando.target.gameObject.GetComponent<ReplacedEnemy>();
+            var replaced = rando.target.GetComponent<ReplacedEnemy>();
             if (!replaced) return;
             replaced.replacements.Remove(rando);
             if (replaced.replacements.Count == 0)
@@ -107,7 +107,7 @@ public static class Randomiser
                 foreach (var dh in replaced.GetComponentsInChildren<DamageHero>()) dh.enabled = false;
                 if (!rando.target.hasSpecialDeath || rando.target.name.Contains("Spine Floater")) 
                     rando.target.transform.position = rando.transform.position;
-                Object.Destroy(replaced);
+                if (!rando.name.Contains("Gloomsac")) Object.Destroy(replaced);
                 rando.target.gameObject.SetActive(true);
                 EnemyRandoPlugin.Instance.StartCoroutine(ZeroHp(rando));
             }
@@ -228,7 +228,7 @@ public static class Randomiser
 
         if (canRerando) EnemyRandoPlugin.Instance.StartCoroutine(WaitForRando(rando.target, rando.randoType));
         
-        if (rando && rando.gameObject) Object.Destroy(rando.gameObject);
+        if (rando && rando.gameObject && !rando.name.Contains("Gloomsac")) Object.Destroy(rando.gameObject);
     }
 
     private static IEnumerator WaitForRando(HealthManager healthManager, Settings.RandoType type)
