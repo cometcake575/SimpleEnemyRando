@@ -25,7 +25,8 @@ public static class EnemyChooser
         "crystal_drifter",
         "leaf_glider",
         "snitchfly",
-        "brushflit"
+        "brushflit",
+        "fourth_chorus"
     ];
 
     // Anything that spawns enemies, either on death or in general
