@@ -166,6 +166,9 @@ public static class EnemyChooser
             hm.name.Contains("Lace") ||
             hm.name.Contains("Silk Boss") ||
             hm.name.Contains("Bone Beast") ||
+            hm.name.Contains("Trobbio") ||
+            hm.name.Contains("Shakra") ||
+            hm.name.Contains("Forebrother") ||
             hm.name.Contains("SG_head")) return EnemyType.Boss;
         foreach (var fsm in hm.GetComponents<PlayMakerFSM>())
         {
