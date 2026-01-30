@@ -376,19 +376,21 @@ public static class Randomiser
         var ogCol = source.GetComponent<Collider2D>();
         for (var i = 0; i < Math.Max(1, Settings.Multiplier.Value); i++)
         {
+            var wasPrefabActive = o.Prefab.activeSelf;
+            o.Prefab.SetActive(false);
             var enemy = Object.Instantiate(
                 o.Prefab,
                 pos,
                 rot);
+            if (wasPrefabActive) o.Prefab.SetActive(true);
 
+            enemy.name = $"[Enemy Rando] {o.GetName()} ({source.name})";
+            o.PostSpawnAction?.Invoke(enemy);
+            
             var re = enemy.AddComponent<ReplacementEnemy>();
             re.target = source;
             re.randoType = type;
             EventHooks.AddEvent(enemy, "OnDeath", ON_RANDO_DEATH);
-
-            enemy.name = $"[Enemy Rando] {o.GetName()} ({source.name})";
-            
-            o.PostSpawnAction?.Invoke(enemy);
 
             foreach (var conf in o.ConfigGroup)
             {
