@@ -76,10 +76,11 @@ public static class Randomiser
                 EnemyRandoPlugin.Logger.LogInfo(healthManager.name);
                 if (healthManager.GetComponent<ReplacementEnemy>()) return;
                 if (healthManager.GetComponent<ReplacedEnemy>()) return;
-
+                
                 if (healthManager.transform.parent)
                 {
-                    if (healthManager.transform.parent.name.Contains("Intro Minions")) return;
+                    if (healthManager.transform.parent.name.Contains("Intro Minions")
+                        || healthManager.transform.parent.name.Contains("Wave 7 - Floor Breaker")) return;
                 }
 
                 if (healthManager.name.Contains("Music Box Bell")) return;
@@ -107,8 +108,9 @@ public static class Randomiser
                 foreach (var dh in replaced.GetComponentsInChildren<DamageHero>()) dh.enabled = false;
                 if (!rando.target.hasSpecialDeath || rando.target.name.Contains("Spine Floater")) 
                     rando.target.transform.position = rando.transform.position;
-                if (!rando.name.Contains("Gloomsac")) Object.Destroy(replaced);
-                rando.target.gameObject.SetActive(true);
+                // Removes the ReplacedEnemy component
+                Object.Destroy(replaced);
+                if (!rando.target.name.Contains("Swamp Mosquito")) rando.target.gameObject.SetActive(true);
                 EnemyRandoPlugin.Instance.StartCoroutine(ZeroHp(rando));
             }
         };
@@ -137,6 +139,14 @@ public static class Randomiser
             {
                 fsm.SendEvent("ZERO HP");
                 if (rando.target.hasSpecialDeath) die = false;
+            }
+
+            if (fsm.name.Contains("Pinstress Boss") && fsm.FsmName == "Control")
+            {
+                fsm.GetState("Stun Fall").AddAction(() => fsm.SendEvent("LAND"));
+                var nc = fsm.transform.Find("NPC").gameObject.LocateMyFSM("NPC Control");
+                nc.GetState("Check Quest").AddAction(() => nc.SendEvent("DEFEATED"), 0);
+                nc.SetState("Meet Ready");
             }
             
             if (fsm.name == "Conductor Boss")
@@ -227,8 +237,19 @@ public static class Randomiser
         if (phaseControl) phaseControl.SetState("Death Hit");
 
         if (canRerando) EnemyRandoPlugin.Instance.StartCoroutine(WaitForRando(rando.target, rando.randoType));
-        
-        if (rando && rando.gameObject && !rando.name.Contains("Gloomsac")) Object.Destroy(rando.gameObject);
+
+        if (rando && rando.gameObject && !rando.name.Contains("Gloomsac"))
+        {
+            if (EnemyChooser.GetEnemyType(rando.GetComponent<HealthManager>()) != EnemyChooser.EnemyType.Boss)
+                Object.Destroy(rando.gameObject);
+            else rando.StartCoroutine(DeleteLater(rando.gameObject));
+        }
+    }
+
+    private static IEnumerator DeleteLater(GameObject obj)
+    {
+        yield return new WaitForSeconds(8);
+        if (obj) Object.Destroy(obj);
     }
 
     private static IEnumerator WaitForRando(HealthManager healthManager, Settings.RandoType type)
