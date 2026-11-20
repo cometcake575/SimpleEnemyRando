@@ -1,3 +1,6 @@
+using System.Linq;
+using Architect.Objects.Categories;
+using Architect.Objects.Placeable;
 using BepInEx;
 using BepInEx.Logging;
 
@@ -20,5 +23,8 @@ public partial class EnemyRandoPlugin : BaseUnityPlugin
         
         Settings.Init(Config);
         Randomiser.Init();
+
+        foreach (var enemy in Categories.Enemies.GetObjects().OfType<PlaceableObject>()) 
+            enemy.ShouldLoad = true;
     }
 }
